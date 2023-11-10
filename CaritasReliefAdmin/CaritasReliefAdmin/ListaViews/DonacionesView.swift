@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/*
 struct DonacionesView: View {
     @State var token:String
     @State var recolector:Int
@@ -55,3 +56,4 @@ struct DonacionesView_Previews: PreviewProvider {
         DonacionesView(token: "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKTWFydGluZXoxMDAiLCJpYXQiOiIxMC8yMi8yMDIzIDAwOjA5OjAxIiwianRpIjoiMzNkYzMzNzgtMDBlNy00ZmNhLWEwMzctMmMwMTkyMGRjYmQyIiwicm9sZSI6InVzZXIiLCJleHAiOjE2OTgwMTk3NDF9.3hoBmCh9owaSJADDluntMDCIbdj9zQKm9XCpG6yzdHs",recolector: 1)
     }
 }
+*/

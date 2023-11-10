@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct DetalleView: View {
     var donante:donantesHoy
     var recolector:Int
@@ -71,3 +71,4 @@ struct DetalleView_Previews: PreviewProvider {
         DetalleView(donante: donante,recolector: 1, token: "")
     }
 }
+*/

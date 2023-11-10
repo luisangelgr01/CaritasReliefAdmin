@@ -7,12 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C2F662D2AFDA19C00713992 /* MainDashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2F662C2AFDA19C00713992 /* MainDashboard.swift */; };
+		0C2F662F2AFDAF2000713992 /* RecolectorCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2F662E2AFDAF2000713992 /* RecolectorCard.swift */; };
 		FB79C8202AF9D1FF004E5EA0 /* CaritasReliefAdminApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C81F2AF9D1FF004E5EA0 /* CaritasReliefAdminApp.swift */; };
 		FB79C8222AF9D1FF004E5EA0 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C8212AF9D1FF004E5EA0 /* ContentView.swift */; };
 		FB79C8242AF9D200004E5EA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB79C8232AF9D200004E5EA0 /* Assets.xcassets */; };
 		FB79C8272AF9D200004E5EA0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB79C8262AF9D200004E5EA0 /* Preview Assets.xcassets */; };
 		FB79C82F2AF9D62F004E5EA0 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C82E2AF9D62F004E5EA0 /* ModelData.swift */; };
-		FB79C8312AF9D68A004E5EA0 /* UserCreds.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C8302AF9D68A004E5EA0 /* UserCreds.swift */; };
 		FB79C8332AF9D72B004E5EA0 /* LoginWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C8322AF9D72B004E5EA0 /* LoginWindow.swift */; };
 		FB79C8352AF9D7A8004E5EA0 /* CaritasSplashScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C8342AF9D7A8004E5EA0 /* CaritasSplashScreen.swift */; };
 		FB79C8392AF9D9DB004E5EA0 /* DonacionesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB79C8382AF9D9DB004E5EA0 /* DonacionesView.swift */; };
@@ -24,13 +25,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C2F662C2AFDA19C00713992 /* MainDashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDashboard.swift; sourceTree = "<group>"; };
+		0C2F662E2AFDAF2000713992 /* RecolectorCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecolectorCard.swift; sourceTree = "<group>"; };
 		FB79C81C2AF9D1FF004E5EA0 /* CaritasReliefAdmin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CaritasReliefAdmin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB79C81F2AF9D1FF004E5EA0 /* CaritasReliefAdminApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaritasReliefAdminApp.swift; sourceTree = "<group>"; };
 		FB79C8212AF9D1FF004E5EA0 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FB79C8232AF9D200004E5EA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB79C8262AF9D200004E5EA0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FB79C82E2AF9D62F004E5EA0 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
-		FB79C8302AF9D68A004E5EA0 /* UserCreds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCreds.swift; sourceTree = "<group>"; };
 		FB79C8322AF9D72B004E5EA0 /* LoginWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginWindow.swift; sourceTree = "<group>"; };
 		FB79C8342AF9D7A8004E5EA0 /* CaritasSplashScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaritasSplashScreen.swift; sourceTree = "<group>"; };
 		FB79C8382AF9D9DB004E5EA0 /* DonacionesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonacionesView.swift; sourceTree = "<group>"; };
@@ -98,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				FB79C82E2AF9D62F004E5EA0 /* ModelData.swift */,
-				FB79C8302AF9D68A004E5EA0 /* UserCreds.swift */,
 			);
 			path = "Backend and vars";
 			sourceTree = "<group>";
@@ -117,6 +118,8 @@
 			children = (
 				FB79C8382AF9D9DB004E5EA0 /* DonacionesView.swift */,
 				FB79C83A2AF9DA09004E5EA0 /* DonacionView.swift */,
+				0C2F662C2AFDA19C00713992 /* MainDashboard.swift */,
+				0C2F662E2AFDAF2000713992 /* RecolectorCard.swift */,
 			);
 			path = ListaViews;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB79C8332AF9D72B004E5EA0 /* LoginWindow.swift in Sources */,
+				0C2F662D2AFDA19C00713992 /* MainDashboard.swift in Sources */,
 				FB79C8222AF9D1FF004E5EA0 /* ContentView.swift in Sources */,
 				FB79C8352AF9D7A8004E5EA0 /* CaritasSplashScreen.swift in Sources */,
 				FB79C83B2AF9DA09004E5EA0 /* DonacionView.swift in Sources */,
@@ -200,8 +204,8 @@
 				FB79C83F2AF9DA77004E5EA0 /* ReciboView.swift in Sources */,
 				FB79C8412AF9DAAA004E5EA0 /* HeaderView.swift in Sources */,
 				FB79C8202AF9D1FF004E5EA0 /* CaritasReliefAdminApp.swift in Sources */,
-				FB79C8312AF9D68A004E5EA0 /* UserCreds.swift in Sources */,
 				FB79C82F2AF9D62F004E5EA0 /* ModelData.swift in Sources */,
+				0C2F662F2AFDAF2000713992 /* RecolectorCard.swift in Sources */,
 				FB79C8432AF9DB1E004E5EA0 /* ComentariosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

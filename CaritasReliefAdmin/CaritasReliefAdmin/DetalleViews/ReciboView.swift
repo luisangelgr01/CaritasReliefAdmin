@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct ReciboView: View {
     @State var recibo:recibosActivos
     @State private var confirmarAccion:Bool = false
@@ -105,3 +105,4 @@ struct ReciboView_Previews: PreviewProvider {
         ReciboView(recibo: recibosActivos(cantidad: 200.0, id: "1"),token: "")
     }
 }
+*/

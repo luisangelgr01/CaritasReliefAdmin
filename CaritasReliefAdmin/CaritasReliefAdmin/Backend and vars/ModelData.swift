@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  CaritasReliefAdmin
 //
-//  Created by Alumno on 06/11/23.
+//  Created by J. Lugo on 06/11/23.
 //
 
 import Foundation
@@ -13,8 +13,6 @@ import SwiftUI
 var ColorPrincipal = Color(red:0,green: 156/255,blue: 166/255)
 var ColorSecundario = Color(red:0,green: 59/255,blue: 92/255)
 var Usuario:User = User(token: "", role: 0, user: [0])
-var Recibos:[recibosActivos] = []
-var Donantes:[donantesHoy] = []
 
 //Structures
 struct User:Codable{
@@ -22,7 +20,18 @@ struct User:Codable{
     let role: Int
     let user: [Int]
 }
-
+struct Response:Codable{
+    let data: Data
+}
+struct Data: Codable{
+    let recolectores: [Recolector]
+}
+struct Recolector:Codable, Identifiable{
+    let id:String
+    let nombres:String
+    let apellidos:String
+}
+/*
 struct Response: Codable {
     let data: DataResponse
 }
@@ -46,6 +55,7 @@ struct Persona:Codable{
     let apellidos:String
     let direccion:String
 }
+*/
 
 //API Calls
 func login(username: String, password: String) -> User? {
@@ -58,7 +68,7 @@ func login(username: String, password: String) -> User? {
     }
     """
     
-    guard let url = URL(string: "http://10.14.255.88:8804/auth/login") else {
+    guard let url = URL(string: "http://10.14.255.88:8804/auth/login/admin") else {
         return nil
     }
     
@@ -87,7 +97,66 @@ func login(username: String, password: String) -> User? {
     return user
 }
 
+func getRecolectores(token:String) -> Data{
+    let query = """
+        {
+            recolectores{
+                id
+                nombres
+                apellidos
+            }
+        }
+    """
+    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+        return Data(recolectores: [])
+    }
+    
+    var request = URLRequest(url:url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    let requestBody = ["query": query]
+    do{
+        let json = try JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = json
+    }catch{
+        print("Error creating request body")
+        return Data(recolectores: [])
+    }
+    
+    var responseData = Data(recolectores: [])
+    
+    let semaphore = DispatchSemaphore(value: 0)
+    
+    let task = URLSession.shared.dataTask(with: request){
+        data, response, error in
+        defer{
+            semaphore.signal()
+        }
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
 
+        if let data = data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                let response = try jsonDecoder.decode(Response.self, from: data)
+                responseData = response.data
+            } catch {
+                print("Error decoding GraphQL response: \(error)")
+                print(String(data: data, encoding: .utf8))
+            }
+        }
+    }
+    task.resume()
+
+    semaphore.wait()
+    return responseData
+}
+
+/*
 func getRecibos(token:String, donante:String, recolector:Int) -> [Donante] {
     let graphQLQuery = """
         {
@@ -151,6 +220,7 @@ func getRecibos(token:String, donante:String, recolector:Int) -> [Donante] {
     semaphore.wait()
     return lista
 }
+ */
 /*
 
 // Usage:
@@ -160,132 +230,6 @@ for recibo in recibos {
     // Add additional processing as needed
 }
 */
-
-//Some other structs
-struct DonanteResponse:Codable{
-    let data:DonanteDataResponse
-}
-
-struct DonanteDataResponse:Codable{
-    let donantesHoy:[donantesHoy]
-}
-
-struct donantesHoy:Codable, Identifiable{
-    let id:String
-    let nombres:String
-    let apellidos:String
-    let direccion:String
-    let telCelular:String
-    let telCasa:String
-    let cantidadRecibosActivos:Int
-}
-
-//API Calls
-func getDonantes(token:String, idRecolector:Int) -> [donantesHoy]{
-    let query = """
-    {
-      donantesHoy(date: "2023-10-22", idRecolector: \(idRecolector)){
-        id,
-        nombres,
-        apellidos,
-        direccion,
-        telCelular,
-        telCasa,
-        cantidadRecibosActivos(date:"2023-10-22",idRecolector: \(idRecolector))
-      }
-    }
-    """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
-        return []
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-    let requestBody = ["query": query]
-    do {
-        let jsonData = try JSONSerialization.data(withJSONObject: requestBody)
-        request.httpBody = jsonData
-    } catch {
-        print("Error creating request body: \(error)")
-
-        return []
-    }
-    
-    var lista:[donantesHoy] = []
-    
-    let semaphore = DispatchSemaphore(value: 0)
-    
-    let task = URLSession.shared.dataTask(with: request){
-        data,response,error in
-        defer {
-            semaphore.signal()
-        }
-
-        if let error = error {
-            print("Error: \(error)")
-            return
-        }
-
-        if let data = data {
-            let jsonDecoder = JSONDecoder()
-            do {
-                let response = try jsonDecoder.decode(DonanteResponse.self, from: data)
-                lista = response.data.donantesHoy
-            } catch {
-                print("Error decoding GraphQL response: \(error)")
-                print(String(data:data, encoding:.utf8))
-            }
-        }
-    }
-    task.resume()
-    
-    semaphore.wait()
-    return lista
-    
-    
-}
-
-func cobrarRecibo(recibo:String, token:String)->Bool{
-    let query = """
-    {
-        cobrarRecibo(id: \(recibo))
-    }
-    """
-    
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
-        return false
-    }
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-    let requestBody = ["query": query]
-    do {
-        let jsonData = try JSONSerialization.data(withJSONObject: requestBody)
-        request.httpBody = jsonData
-    } catch {
-        print("Error creating request body: \(error)")
-
-        return false
-    }
-    
-    var responseval:Bool = false
-    
-    let task = URLSession.shared.dataTask(with: request){
-        data,response,error in
-        let jsonDecoder = JSONDecoder()
-        if (data != nil){
-            responseval = true
-        }else{
-            responseval = false
-        }
-    }
-    
-    task.resume()
-    return responseval
-    
-}
 
 struct postponeResponse:Codable{
     let data:postponer

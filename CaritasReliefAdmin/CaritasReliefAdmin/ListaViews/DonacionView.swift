@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 struct DonacionView: View {
     var donante: donantesHoy
     @State var barColor:Color = .red
@@ -88,3 +88,4 @@ struct DonacionView_Previews: PreviewProvider {
         DonacionView(donante: donante)
     }
 }
+*/

@@ -90,7 +90,8 @@ struct LoginWindow: View {
                     Button("Acceder") {
                         let x = login(username: IdUsername, password: IdPassword)
                         if(x != nil){
-                            Usuario = x!
+                            UserDefaults.standard.setValue(x?.token, forKey: "token")
+                            UserDefaults.standard.setValue(x?.user.first, forKey: "ID")
                             print(Usuario.token)
                             token = x!.token
                             recolector = x!.user[0]
@@ -112,7 +113,7 @@ struct LoginWindow: View {
                         Alert(title: Text("Usuario o contraseña incorrectos"))
                     }
                     .navigationDestination( isPresented: $authorized){
-                        DonacionesView(token:token, recolector: recolector)
+                        MainDashboard(token:token)
                     }
                     .onAppear {
                         withAnimation(.spring().delay(0.8)) {
