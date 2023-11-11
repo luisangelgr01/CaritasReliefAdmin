@@ -14,7 +14,7 @@ var ColorPrincipal = Color(red:0,green: 156/255,blue: 166/255)
 var ColorSecundario = Color(red:0,green: 59/255,blue: 92/255)
 var Usuario:User = User(token: "", role: 0, user: [0])
 
-//Structures
+//
 struct User:Codable{
     let token: String
     let role: Int
@@ -31,16 +31,16 @@ struct Recolector:Codable, Identifiable{
     let nombres:String
     let apellidos:String
 }
-/*
-struct Response: Codable {
+//getRecibos
+struct Response4: Codable {
     let data: DataResponse
 }
 
 struct DataResponse: Codable {
-    let donantes: [Donante]
+    let recolector: Recolector2
 }
 
-struct Donante: Codable, Identifiable {
+struct Recolector2: Codable, Identifiable {
     let id: String
     let recibosActivos: [recibosActivos]
 }
@@ -48,15 +48,49 @@ struct Donante: Codable, Identifiable {
 struct recibosActivos:Codable, Identifiable{
     let cantidad:Double
     let id:String
+    let cobrado: Int
+    let donante:Donante
 }
 
-struct Persona:Codable{
+struct Donante:Codable, Identifiable{
+    let id:String
     let nombres:String
     let apellidos:String
     let direccion:String
+    let telCelular:String
+    let telCasa:String
 }
-*/
 
+//getDashChart y getChart
+struct Response2:Codable{
+    let data: ChartData
+}
+
+struct ChartData:Codable{
+    let estadoRecibos:EstadoRecibos
+}
+
+struct EstadoRecibos:Codable{
+    let cobradosFallidos:Int
+    let pendiente:Int
+    let cobrados:Int
+}
+
+//getTotalCobrado
+struct Response3:Codable{
+    let data:CobradoData
+}
+struct CobradoData:Codable{
+    let totalCobrado:Double
+}
+
+//reasignarRecibo
+struct Response5:Codable{
+    let data:TransferirARecolector
+}
+struct TransferirARecolector:Codable{
+    let transferirARecolector:String
+}
 //API Calls
 func login(username: String, password: String) -> User? {
     var user: User?
@@ -156,21 +190,29 @@ func getRecolectores(token:String) -> Data{
     return responseData
 }
 
-/*
-func getRecibos(token:String, donante:String, recolector:Int) -> [Donante] {
+func getRecibos(token:String, recolector:String) -> Recolector2 {
     let graphQLQuery = """
         {
-            donantes(id: \(donante)) {
-                id,
-                recibosActivos(date: "2023-10-22", idRecolector: \(recolector)) {
+            recolector(id:\(recolector)){
+                id
+                recibosActivos(date: "2023-12-01", order: [{cobrado: DESC}]){
+                    id,
                     cantidad,
-                    id
+                    cobrado,
+                    donante{
+                        id,
+                        nombres,
+                        apellidos,
+                        direccion,
+                        telCelular,
+                        telCasa
+                    }
                 }
             }
         }
     """
     guard let url = URL(string: "http://10.14.255.88:8084/graphql") else {
-        return []
+        return Recolector2(id: "", recibosActivos: [])
     }
 
     var request = URLRequest(url: url)
@@ -186,10 +228,10 @@ func getRecibos(token:String, donante:String, recolector:Int) -> [Donante] {
         request.httpBody = jsonData
     } catch {
         print("Error creating request body: \(error)")
-        return []
+        return Recolector2(id: "", recibosActivos: [])
     }
 
-    var lista: [Donante] = []
+    var lista: Recolector2 = Recolector2(id: "", recibosActivos: [])
 
     let semaphore = DispatchSemaphore(value: 0)
 
@@ -206,12 +248,15 @@ func getRecibos(token:String, donante:String, recolector:Int) -> [Donante] {
         if let data = data {
             let jsonDecoder = JSONDecoder()
             do {
-                let response = try jsonDecoder.decode(Response.self, from: data)
-                lista = response.data.donantes
+                let response = try jsonDecoder.decode(Response4.self, from: data)
+                lista = response.data.recolector
+                if let data = try? PropertyListEncoder().encode(lista.recibosActivos) {
+                        UserDefaults.standard.set(data, forKey: "recibos")
+                    }
             } catch {
                 print("Error decoding GraphQL response: \(error)")
                 print(String(data: data, encoding: .utf8))
-                print(donante)
+                
             }
         }
     }
@@ -220,7 +265,6 @@ func getRecibos(token:String, donante:String, recolector:Int) -> [Donante] {
     semaphore.wait()
     return lista
 }
- */
 /*
 
 // Usage:
@@ -230,6 +274,234 @@ for recibo in recibos {
     // Add additional processing as needed
 }
 */
+
+func reasignarRecibo(token:String, recolector:String, recibo:String) -> TransferirARecolector{
+    let query = """
+        {
+            transferirARecolector(idRecibo: \(recibo), idRecolector: \(recolector))
+        }
+    """
+    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+        return TransferirARecolector(transferirARecolector: "NOT OK")
+    }
+    var request = URLRequest(url:url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    let requestBody = ["query": query]
+    do{
+        let json = try JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = json
+    }catch{
+        print("Error creating request body")
+        return TransferirARecolector(transferirARecolector: "NOT OK")
+    }
+    
+    var responseData = TransferirARecolector(transferirARecolector: "")
+    
+    let semaphore = DispatchSemaphore(value: 0)
+    
+    let task = URLSession.shared.dataTask(with: request){
+        data, response, error in
+        defer{
+            semaphore.signal()
+        }
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
+
+        if let data = data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                let response = try jsonDecoder.decode(Response5.self, from: data)
+                responseData = response.data
+            } catch {
+                print("Error decoding GraphQL response: \(error)")
+                print(String(data: data, encoding: .utf8))
+            }
+        }
+    }
+    task.resume()
+
+    semaphore.wait()
+    return responseData
+}
+
+func getChart(token:String, recolector:String)-> EstadoRecibos{
+    let query = """
+        {
+            estadoRecibos(date: "2023-12-01", idRecolector: \(recolector) ){
+                cobradosFallidos
+                pendiente
+                cobrados
+            }
+        }
+    """
+    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+        return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    }
+    
+    var request = URLRequest(url:url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    let requestBody = ["query": query]
+    do{
+        let json = try JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = json
+    }catch{
+        print("Error creating request body")
+        return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    }
+    
+    var responseData = EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    
+    let semaphore = DispatchSemaphore(value: 0)
+    
+    let task = URLSession.shared.dataTask(with: request){
+        data, response, error in
+        defer{
+            semaphore.signal()
+        }
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
+
+        if let data = data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                let response = try jsonDecoder.decode(Response2.self, from: data)
+                responseData = response.data.estadoRecibos
+            } catch {
+                print("Error decoding GraphQL response: \(error)")
+                print(String(data: data, encoding: .utf8))
+            }
+        }
+    }
+    task.resume()
+
+    semaphore.wait()
+    return responseData
+}
+
+func getDashChart(token:String) -> EstadoRecibos {
+    let query = """
+        {
+            estadoRecibos(date: "2023-12-01"){
+                cobradosFallidos
+                pendiente
+                cobrados
+            }
+        }
+    """
+    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+        return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    }
+    
+    var request = URLRequest(url:url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    let requestBody = ["query": query]
+    do{
+        let json = try JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = json
+    }catch{
+        print("Error creating request body")
+        return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    }
+    
+    var responseData = EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    
+    let semaphore = DispatchSemaphore(value: 0)
+    
+    let task = URLSession.shared.dataTask(with: request){
+        data, response, error in
+        defer{
+            semaphore.signal()
+        }
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
+
+        if let data = data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                let response = try jsonDecoder.decode(Response2.self, from: data)
+                responseData = response.data.estadoRecibos
+            } catch {
+                print("Error decoding GraphQL response: \(error)")
+                print(String(data: data, encoding: .utf8))
+            }
+        }
+    }
+    task.resume()
+
+    semaphore.wait()
+    return responseData
+    
+}
+
+func getTotalCobrado(token:String, repartidor:String) -> Double{
+    let query = """
+        {
+            totalCobrado(date: "2023-12-01", idRecolector: \(repartidor))
+        }
+    """
+    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+        return 0
+    }
+    
+    var request = URLRequest(url:url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    let requestBody = ["query": query]
+    do{
+        let json = try JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = json
+    }catch{
+        print("Error creating request body")
+        return 0
+    }
+    
+    var responseData = 0.0
+    
+    let semaphore = DispatchSemaphore(value: 0)
+    
+    let task = URLSession.shared.dataTask(with: request){
+        data, response, error in
+        defer{
+            semaphore.signal()
+        }
+        if let error = error {
+            print("Error: \(error)")
+            return
+        }
+
+        if let data = data {
+            let jsonDecoder = JSONDecoder()
+            do {
+                let response = try jsonDecoder.decode(Response3.self, from: data)
+                responseData = response.data.totalCobrado
+            } catch {
+                print("Error decoding GraphQL response: \(error)")
+                print(String(data: data, encoding: .utf8))
+            }
+        }
+    }
+    task.resume()
+
+    semaphore.wait()
+    return responseData
+}
 
 struct postponeResponse:Codable{
     let data:postponer

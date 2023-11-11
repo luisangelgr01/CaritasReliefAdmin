@@ -1,12 +1,12 @@
 //
 //  ReciboView.swift
-//  CaritasReliefAdmin
+//  ProyectoCaritas
 //
-//  Created by Alumno on 06/11/23.
+//  Created by Alumno on 20/10/23.
 //
 
 import SwiftUI
-/*
+
 struct ReciboView: View {
     @State var recibo:recibosActivos
     @State private var confirmarAccion:Bool = false
@@ -23,17 +23,16 @@ struct ReciboView: View {
                             Text("#\(recibo.id)")
                                 .font(.largeTitle)
                                 .bold()
+                                .padding(.leading, 20)
                             Spacer()
                             
                             Text("$\(Int(recibo.cantidad))")
                                 .font(.title)
                                 .foregroundColor(Color(red: 0.003, green: 0.208, blue: 0.327))
-                            
-                            
-                            
+                     
                                 .font(.title)
+                                .padding(.trailing, 20)
                                 .foregroundColor(Color(red: 0.003, green: 0.208, blue: 0.327))
-                            
                             
                         }.padding(.bottom, 8)
                         
@@ -43,41 +42,47 @@ struct ReciboView: View {
                     .padding(.bottom, 20)
                     HStack{
                         Spacer()
-                        Button(action: comentariosAct){
-                            
-                            Image(systemName: "xmark")
-                                .font(.title)
-                                .padding(.horizontal,50 )
-                        }.buttonStyle(.borderedProminent)
-                            .tint(.red)
-                            .navigationDestination(isPresented: $comentarios){
-                                ComentariosView(recibo: recibo.id, token: token)
-                            }
+                        
                         Button(action: confirmar){
                             
-                            Image(systemName: "checkmark")
+                            Text("Sí")
                                 .padding(.horizontal,50 )
+                                .padding(.vertical, 20)
                                 .font(.title)
                             
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(ColorPrincipal)
-                        .alert("Continuar?",isPresented: $confirmarAccion){
-                            Button("SI"){
-                                let response = cobrarRecibo(recibo: recibo.id, token: token)
+                        .alert("¿Deseas marcar el recibo como cobrado?",isPresented: $confirmarAccion){
+                            Button("Si"){
+                                /*let response = cobrarRecibo(recibo: recibo.id, token: token)
                                 if(response == false){
                                     errorAlert.toggle()
                                 }
+                                
+                                */
                             }
-                            Button("NO"){}
+                            Button("No"){}
+                                 
                         }
                         
-                        
+                        Button(action: comentariosAct){
+                            
+                            Text("No")
+                                .font(.title)
+                                .padding(.horizontal, 50)
+                                .padding(.vertical, 20)
+                        }.buttonStyle(.borderedProminent)
+                            .tint(.red)
+                            .navigationDestination(isPresented: $comentarios){
+                                ComentariosView(recibo: recibo.id, token: token)
+                            }
                         
                         
                         Spacer()
                         
                     }
+                    .padding(.bottom, 20)
                 }
                 .padding(.top, 20)
                 .overlay(
@@ -102,7 +107,6 @@ struct ReciboView: View {
 
 struct ReciboView_Previews: PreviewProvider {
     static var previews: some View {
-        ReciboView(recibo: recibosActivos(cantidad: 200.0, id: "1"),token: "")
+        ReciboView(recibo: recibosActivos(cantidad: 200.0, id: "1", cobrado: 2 ,donante: Donante(id: "", nombres: "", apellidos: "", direccion: "", telCelular: "", telCasa: "")), token:"")
     }
 }
-*/

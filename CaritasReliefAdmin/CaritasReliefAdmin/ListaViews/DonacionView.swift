@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
-/*
+
 struct DonacionView: View {
-    var donante: donantesHoy
+    var donante: Donante
+    var recibo: recibosActivos
     @State var barColor:Color = .red
+    @State var fontColor:Color = .black
     var body: some View {
     
         VStack{
@@ -20,6 +22,7 @@ struct DonacionView: View {
                         Text("\(donante.nombres) \(donante.apellidos)")
                             .font(.largeTitle)
                             .bold()
+                            .foregroundColor(fontColor)
                         Spacer()
                         //Si hay mas de un recibo mostrar cantidad de recibos si solo hay uno mostrar la cantidad de donacion
                         
@@ -32,13 +35,13 @@ struct DonacionView: View {
                         */
                         //numero de recibos
                         HStack{
-                            Text("\(donante.cantidadRecibosActivos)")
-                            Image(systemName: "doc.plaintext")
-                            
+                            Text("#\(recibo.id)")
+                                
                             
                         }
                         .font(.title)
-                        .foregroundColor(Color(red: 0.003, green: 0.208, blue: 0.327))
+                        .foregroundColor(fontColor)
+                    
                         
                         
                     }.padding(.bottom, 8)
@@ -46,6 +49,8 @@ struct DonacionView: View {
                     //direccion
                     Text(donante.direccion)
                         .font(.title2)
+                        .foregroundColor(fontColor)
+                    
                 }
                 .padding(.horizontal, 20)
                 //Barra de estado
@@ -69,10 +74,15 @@ struct DonacionView: View {
             
             .background(.white)
             .onAppear(){
-                if(donante.cantidadRecibosActivos == 0){
+                if(recibo.cobrado == 1){
                     barColor = .green
-                }else{
+                    fontColor = .gray
+                }else if(recibo.cobrado == 0){
                     barColor = .red
+                    fontColor = .gray
+                }else{
+                    barColor = .yellow
+                    fontColor = .black
                 }
             }
             
@@ -84,8 +94,8 @@ struct DonacionView: View {
 
 struct DonacionView_Previews: PreviewProvider {
     static var previews: some View {
-        @State var donante:donantesHoy = donantesHoy(id: "", nombres: "", apellidos: "", direccion: "", telCelular: "", telCasa: "", cantidadRecibosActivos: 1)
-        DonacionView(donante: donante)
+        @State var donante:Donante = Donante(id: "", nombres: "", apellidos: "", direccion: "", telCelular: "", telCasa: "")
+        @State var recibo:recibosActivos = recibosActivos( cantidad: 200.0, id: "1", cobrado: 2, donante: donante)
+        DonacionView(donante: donante, recibo: recibo)
     }
 }
-*/

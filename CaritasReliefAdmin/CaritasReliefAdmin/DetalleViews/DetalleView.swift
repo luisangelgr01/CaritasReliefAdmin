@@ -1,19 +1,18 @@
 //
 //  DetalleView.swift
-//  CaritasReliefAdmin
+//  ProyectoCaritas
 //
-//  Created by Alumno on 06/11/23.
+//  Created by Alumno on 20/10/23.
 //
 
 import SwiftUI
-/*
+
 struct DetalleView: View {
-    var donante:donantesHoy
+    var donante:Donante
+    var recibo:recibosActivos
     var recolector:Int
     @State var token:String
         var body: some View {
-            var Donante = getRecibos(token: token, donante: donante.id, recolector: 1)
-            var listaRecibos = Donante[0].recibosActivos
         VStack(alignment: .center){
             HeaderView(titulo: "\(donante.nombres) \(donante.apellidos)")
             VStack{
@@ -53,22 +52,26 @@ struct DetalleView: View {
                 }.padding(.bottom, 15)
                 
                 
+            
                 
             }.padding(.horizontal, 30)
-            List(listaRecibos){recibo in
+            .padding(.top, 20)
+            if(recibo.cobrado == 2){
                 ReciboView(recibo: recibo,token: token)
-                    .listRowSeparator(.hidden)
+                    .padding(.horizontal, 20)
+            }else{
+                Text("No tiene cobros pendientes")
+                    .font(.title)
             }
-            .listStyle(.plain)
-            
+            Spacer()
         }
     }
 }
 
 struct DetalleView_Previews: PreviewProvider {
     static var previews: some View {
-        @State var donante:donantesHoy = donantesHoy(id: "1", nombres: "", apellidos: "", direccion: "", telCelular: "", telCasa: "", cantidadRecibosActivos: 1)
-        DetalleView(donante: donante,recolector: 1, token: "")
+        @State var donante:Donante = Donante(id: "1", nombres: "", apellidos: "", direccion: "", telCelular: "", telCasa: "")
+        @State var recibo:recibosActivos = recibosActivos( cantidad: 200.0, id: "1", cobrado: 2, donante: donante)
+        DetalleView(donante: donante, recibo: recibo, recolector: 1 ,token: "")
     }
 }
-*/
