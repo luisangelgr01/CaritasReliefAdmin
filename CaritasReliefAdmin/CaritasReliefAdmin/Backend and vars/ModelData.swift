@@ -49,6 +49,7 @@ struct recibosActivos:Codable, Identifiable{
     let cantidad:Double
     let id:String
     let cobrado: Int
+    let comentario: String
     let donante:Donante
 }
 
@@ -199,6 +200,7 @@ func getRecibos(token:String, recolector:String) -> Recolector2 {
                     id,
                     cantidad,
                     cobrado,
+                    comentario,
                     donante{
                         id,
                         nombres,

@@ -95,7 +95,7 @@ struct DonacionView: View {
 struct DonacionView_Previews: PreviewProvider {
     static var previews: some View {
         @State var donante:Donante = Donante(id: "", nombres: "", apellidos: "", direccion: "", telCelular: "", telCasa: "")
-        @State var recibo:recibosActivos = recibosActivos( cantidad: 200.0, id: "1", cobrado: 2, donante: donante)
+        @State var recibo:recibosActivos = recibosActivos( cantidad: 200.0, id: "1", cobrado: 2, comentario: "", donante: donante)
         DonacionView(donante: donante, recibo: recibo)
     }
 }
