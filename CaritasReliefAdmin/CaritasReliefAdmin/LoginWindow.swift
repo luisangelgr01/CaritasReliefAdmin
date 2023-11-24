@@ -64,7 +64,7 @@ struct LoginWindow: View {
                     
                     Spacer()
                     TextField("Username", text: $IdUsername)
-                        .font(.system(size: 20))
+                        .font(.title)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 60)
                         .offset(x: usernameOffset)
@@ -75,7 +75,7 @@ struct LoginWindow: View {
                         }
                     
                     SecureField("Password", text: $IdPassword)
-                        .font(.system(size: 20))
+                        .font(.title)
                         .textFieldStyle(.roundedBorder)
                         .padding(.horizontal, 60)
                         .padding(.bottom, 10)
@@ -87,11 +87,10 @@ struct LoginWindow: View {
                         }
                         .textContentType(.password)
                     
-                    Button("Acceder") {
+                    Button(action:{
                         let x = login(username: IdUsername, password: IdPassword)
                         if(x != nil){
-                            UserDefaults.standard.setValue(x?.token, forKey: "token")
-                            UserDefaults.standard.setValue(x?.user.first, forKey: "ID")
+                            Usuario = x!
                             print(Usuario.token)
                             token = x!.token
                             recolector = x!.user[0]
@@ -99,21 +98,23 @@ struct LoginWindow: View {
                         }else{
                             loginerror.toggle()
                         }
+                    }){
+                        Text("Acceder")
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 76)
+                            .font(.title)
                     }
-                    
-                    .font(.title2)
-                    .controlSize(.large)
+                    .padding(.top, 40)
+                    .padding(.bottom, 100)
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.capsule)
-                    .padding(.bottom, 100)
-                    .padding(.top, 60)
                     .tint(ColorS)
                     .offset(y: buttonOffset)
                     .alert(isPresented:$loginerror){
                         Alert(title: Text("Usuario o contraseña incorrectos"))
                     }
                     .navigationDestination( isPresented: $authorized){
-                        MainDashboard(token:token)
+                        MainDashboard(token: token)
                     }
                     .onAppear {
                         withAnimation(.spring().delay(0.8)) {

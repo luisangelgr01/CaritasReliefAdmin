@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CambiarRecibo: View {
     @Environment(\.presentationMode) var presentationMode
-    @State var recibo:recibosActivos = recibosActivos(cantidad: 100, id: "1", cobrado: 2, comentario: "", donante: Donante(id: "a", nombres: "a", apellidos: "a", direccion: "", telCelular: "a", telCasa: "a"))
+    @State var recibo:recibosActivos = recibosActivos(cantidad: 100, id: "1", cobrado: 2, comentarios: "", donante: Donante(id: "a", nombres: "a", apellidos: "a", direccion: "", telCelular: "a", telCasa: "a"))
     @State private var data:[Recolector] = []
     @State var recolector:Recolector = Recolector(id: "1", nombres: "Jose", apellidos: "Martinez")
     @State private var modify:Bool = false

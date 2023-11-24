@@ -49,7 +49,7 @@ struct recibosActivos:Codable, Identifiable{
     let cantidad:Double
     let id:String
     let cobrado: Int
-    let comentario: String
+    let comentarios: String
     let donante:Donante
 }
 
@@ -103,7 +103,7 @@ func login(username: String, password: String) -> User? {
     }
     """
     
-    guard let url = URL(string: "http://10.14.255.88:8804/auth/login/admin") else {
+    guard let url = URL(string: "http://10.14.255.88:8000/auth/login/admin") else {
         return nil
     }
     
@@ -142,7 +142,7 @@ func getRecolectores(token:String) -> Data{
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
         return Data(recolectores: [])
     }
     
@@ -200,7 +200,7 @@ func getRecibos(token:String, recolector:String) -> Recolector2 {
                     id,
                     cantidad,
                     cobrado,
-                    comentario,
+                    comentarios,
                     donante{
                         id,
                         nombres,
@@ -213,7 +213,7 @@ func getRecibos(token:String, recolector:String) -> Recolector2 {
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else {
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else {
         return Recolector2(id: "", recibosActivos: [])
     }
 
@@ -283,7 +283,7 @@ func reasignarRecibo(token:String, recolector:String, recibo:String) -> Transfer
             transferirARecolector(idRecibo: \(recibo), idRecolector: \(recolector))
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
         return TransferirARecolector(transferirARecolector: "NOT OK")
     }
     var request = URLRequest(url:url)
@@ -341,7 +341,7 @@ func getChart(token:String, recolector:String)-> EstadoRecibos{
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
         return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
     }
     
@@ -400,7 +400,7 @@ func getDashChart(token:String) -> EstadoRecibos {
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
         return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
     }
     
@@ -456,7 +456,7 @@ func getTotalCobrado(token:String, repartidor:String) -> Double{
             totalCobrado(date: "2023-12-01", idRecolector: \(repartidor))
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
         return 0
     }
     
@@ -519,7 +519,7 @@ func sendComments(recibo:String,comentarios:String,token:String){
         postponerRecibo(id: \(recibo), comentario: "\(comentarios)")
     }
     """
-    guard let url = URL(string: "http://10.14.255.88:8084/graphql") else{
+    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
         return
     }
     var request = URLRequest(url: url)
@@ -549,4 +549,32 @@ func sendComments(recibo:String,comentarios:String,token:String){
         }
     }
     task.resume()
+}
+
+
+func getComentarios(tokenC:String, recolectorC:String) -> [Int] {
+    
+    let recibosComentarios = getRecibos(token: tokenC, recolector: recolectorC).recibosActivos
+    var comentariosCont:[Int] = [0,0,0,0,0,0]
+    
+    for recibo in recibosComentarios{
+        print(recibo.comentarios)
+        if(recibo.comentarios == ""){
+            comentariosCont[0] += 1
+        }else if(recibo.comentarios == "No se encontraba en casa"){
+            comentariosCont[1] += 1
+        }else if(recibo.comentarios == "Ya no vive ahi"){
+            comentariosCont[2] += 1
+        }else if(recibo.comentarios == "No desea continuar ayudando"){
+            comentariosCont[3] += 1
+        }else if(recibo.comentarios == "Indispuesto"){
+            comentariosCont[4] += 1
+        }else if(recibo.comentarios == "No se ubicó el domicilio"){
+            comentariosCont[5] += 1
+        }
+        
+    }
+    print(comentariosCont)
+    return comentariosCont
+    
 }
