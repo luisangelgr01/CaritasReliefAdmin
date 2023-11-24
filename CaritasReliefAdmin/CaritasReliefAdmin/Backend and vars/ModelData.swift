@@ -103,7 +103,7 @@ func login(username: String, password: String) -> User? {
     }
     """
     
-    guard let url = URL(string: "http://10.14.255.88:8000/auth/login/admin") else {
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/auth/login/admin") else {
         return nil
     }
     
@@ -142,7 +142,7 @@ func getRecolectores(token:String) -> Data{
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else{
         return Data(recolectores: [])
     }
     
@@ -213,7 +213,7 @@ func getRecibos(token:String, recolector:String) -> Recolector2 {
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else {
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else {
         return Recolector2(id: "", recibosActivos: [])
     }
 
@@ -283,7 +283,7 @@ func reasignarRecibo(token:String, recolector:String, recibo:String) -> Transfer
             transferirARecolector(idRecibo: \(recibo), idRecolector: \(recolector))
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else{
         return TransferirARecolector(transferirARecolector: "NOT OK")
     }
     var request = URLRequest(url:url)
@@ -341,7 +341,7 @@ func getChart(token:String, recolector:String)-> EstadoRecibos{
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else{
         return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
     }
     
@@ -400,7 +400,7 @@ func getDashChart(token:String) -> EstadoRecibos {
             }
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else{
         return EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
     }
     
@@ -456,7 +456,7 @@ func getTotalCobrado(token:String, repartidor:String) -> Double{
             totalCobrado(date: "2023-12-01", idRecolector: \(repartidor))
         }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else{
         return 0
     }
     
@@ -519,7 +519,7 @@ func sendComments(recibo:String,comentarios:String,token:String){
         postponerRecibo(id: \(recibo), comentario: "\(comentarios)")
     }
     """
-    guard let url = URL(string: "http://10.14.255.88:8000/graphql") else{
+    guard let url = URL(string: "https://equipo20.tc2007b.tec.mx/graphql") else{
         return
     }
     var request = URLRequest(url: url)
