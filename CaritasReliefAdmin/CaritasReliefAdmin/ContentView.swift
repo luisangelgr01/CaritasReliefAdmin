@@ -24,7 +24,8 @@ struct ContentView: View {
                         }
                 } else {
                     LoginWindow()
-                    Link("link", destination: URL(string:"https://drive.google.com/drive/folders/1GF2v-bt427Cy3BLcA-d7ADys_6mMXa50?usp=sharing" )!)
+                    /*
+                    Link("link", destination: URL(string:"https://drive.google.com/drive/folders/1GF2v-bt427Cy3BLcA-d7ADys_6mMXa50?usp=sharing" )!)*/
                 }
             }
     }

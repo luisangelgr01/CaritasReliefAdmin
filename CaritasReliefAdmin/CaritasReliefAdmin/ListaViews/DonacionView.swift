@@ -47,7 +47,7 @@ struct DonacionView: View {
                     }.padding(.bottom, 8)
                     
                     //direccion
-                    Text(donante.direccion)
+                    Text(recibo.comentarios)
                         .font(.title2)
                         .foregroundColor(fontColor)
                     

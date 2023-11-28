@@ -12,6 +12,7 @@ struct RecibosRecolector: View {
     @State var token:String = ""
     @State var recolector:Recolector = Recolector(id: "1", nombres: "J", apellidos: "Martinez")
     @State var ChartData:EstadoRecibos = EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    @State var CommentData:[Int] = [0,0,0,0,0,0]
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
@@ -35,13 +36,15 @@ struct RecibosRecolector: View {
                                             .padding()
                     }.offset(x:-175,y:-15)
                 }
-                Text("Rendimiento actual")
+                Text("Razones para no cobrar")
                     .font(.largeTitle)
                     .bold()
                 Chart{
-                    BarMark(x: .value("Estatus","Fallido"),y: .value("Recibos",ChartData.cobradosFallidos)).foregroundStyle(.red)
-                    BarMark(x: .value("Estatus","Pendiente"),y: .value("Recibos",ChartData.pendiente)).foregroundStyle(.yellow)
-                    BarMark(x: .value("Estatus","Cobrado"),y: .value("Recibos",ChartData.cobrados)).foregroundStyle(ColorPrincipal)
+                    BarMark(x: .value("Estatus","No estaba"),y: .value("Recibos",CommentData[1]))
+                    BarMark(x: .value("Estatus","Se mudó"),y: .value("Recibos",CommentData[2]))
+                    BarMark(x: .value("Estatus","No quiere seguir ayudando"),y: .value("Recibos",CommentData[3]))
+                    BarMark(x: .value("Estatus","Indispuesto"),y: .value("Recibos",CommentData[4]))
+                    BarMark(x: .value("Estatus","Perdido"),y: .value("Recibos",CommentData[5]))
                 }.frame(height: 200)
                 List(recibos) { recibo in
                     NavigationLink{
@@ -52,6 +55,7 @@ struct RecibosRecolector: View {
                 }.listStyle(.plain)
             }.onAppear(){
                 ChartData = getChart(token: token, recolector: recolector.id)
+                CommentData = getComentarios(tokenC: token, recolectorC: recolector.id)
             }
         }
         .navigationBarHidden(true)
