@@ -20,7 +20,7 @@ struct DonacionView: View {
                     HStack(alignment: .center){
                         //Nombre de donante
                         Text("\(donante.nombres) \(donante.apellidos)")
-                            .font(.largeTitle)
+                            .font(.title)
                             .bold()
                             .foregroundColor(fontColor)
                         Spacer()
@@ -35,7 +35,7 @@ struct DonacionView: View {
                         */
                         //numero de recibos
                         HStack{
-                            Text("#\(recibo.id)")
+                            Text("#\((String(format: "%06d", Int(recibo.id)!)))")
                                 
                             
                         }
