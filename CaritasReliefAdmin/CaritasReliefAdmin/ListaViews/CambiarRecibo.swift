@@ -36,7 +36,6 @@ struct CambiarRecibo: View {
                                             .padding()
                     }.offset(x:-175,y:-15)
                 }
-                Spacer()
                 VStack(alignment: .leading){
                     Text("Donación:").font(.largeTitle)
                     DonacionView(donante: recibo.donante, recibo: recibo)
@@ -89,7 +88,8 @@ struct CambiarRecibo: View {
                     }
                 }
                 Spacer()
-            }.onAppear(){
+            }.padding(.horizontal,20)
+            .onAppear(){
                 data = getRecolectores(token: token).recolectores
                 selection = recolector.id
             }
