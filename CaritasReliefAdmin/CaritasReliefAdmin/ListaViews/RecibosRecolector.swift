@@ -16,7 +16,7 @@ struct RecibosRecolector: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        let recibos:[recibosActivos] = getRecibos(token: token, recolector: recolector.id).recibosActivos
+        var recibos:[recibosActivos] = getRecibos(token: token, recolector: recolector.id).recibosActivos
         
         NavigationStack{
             VStack{
@@ -52,7 +52,10 @@ struct RecibosRecolector: View {
                         }label:{
                             DonacionView(donante: recibo.donante, recibo: recibo)
                         }
-                }.listStyle(.plain)
+                }.refreshable {
+                    recibos = getRecibos(token: token, recolector: recolector.id).recibosActivos
+                }
+                .listStyle(.plain)
             }.onAppear(){
                 ChartData = getChart(token: token, recolector: recolector.id)
                 CommentData = getComentarios(tokenC: token, recolectorC: recolector.id)

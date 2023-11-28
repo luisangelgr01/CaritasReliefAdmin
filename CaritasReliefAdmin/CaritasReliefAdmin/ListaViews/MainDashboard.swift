@@ -12,7 +12,7 @@ struct MainDashboard: View {
     @State var token:String = ""
     @State private var ChartData:EstadoRecibos = EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
     var body: some View {
-        let data = getRecolectores(token: token)
+        var data = getRecolectores(token: token)
         NavigationStack{
             VStack{
                 HeaderView(titulo: "Dashboard")
@@ -47,6 +47,8 @@ struct MainDashboard: View {
                         RecolectorCard(recolector: recolector)
                             .listRowSeparator(.hidden)
                     }
+                }.refreshable {
+                    data = getRecolectores(token: token)
                 }
                 .listStyle(.plain)
                 Spacer()
