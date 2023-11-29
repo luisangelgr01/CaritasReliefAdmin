@@ -12,10 +12,13 @@ struct DetalleView: View {
     var recibo:recibosActivos
     var recolector:Int
     @State var token:String
+    
+    
+    
         var body: some View {
         VStack(alignment: .center){
             HeaderView(titulo: "\(donante.nombres) \(donante.apellidos)")
-            VStack{
+            VStack{ 
                 HStack(alignment: .center){
                     Image(systemName: "mappin.circle.fill")
                         .font(.largeTitle)

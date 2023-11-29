@@ -11,11 +11,25 @@ import Charts
 struct MainDashboard: View {
     @State var token:String = ""
     @State private var ChartData:EstadoRecibos = EstadoRecibos(cobradosFallidos: 0, pendiente: 0, cobrados: 0)
+    
     var body: some View {
         var data = getRecolectores(token: token)
         NavigationStack{
             VStack{
-                HeaderView(titulo: "Dashboard")
+                ZStack{
+                    HeaderView(titulo: "Dashboard")
+                    Button(action: {getCSV(token: token)}){
+                        Image(systemName: "square.and.arrow.up")
+                            .resizable(resizingMode: .stretch)
+                            .aspectRatio(contentMode: .fit)
+                            
+                            .foregroundColor(.white)
+                            .frame(width: 25)
+                        
+                    }
+                    .offset(x: 155, y: -15)
+                        
+                }
                 TabView{
                     VStack{
                         Text("Rendimiento actual")
